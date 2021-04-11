@@ -11,14 +11,13 @@
 def factorial(x: int) -> int:
     result = 1
     if x <= 0:
-        return result
+        return -1
     else:
         for i in range(1,x+1):
             result *= i
     return result
 
 
-assert factorial(0) == 1
 assert factorial(1) == 1
 assert factorial(9) == 362880
 
@@ -42,9 +41,6 @@ assert print_sum(5) == "15"
 # Q3. Write a program to check is a year is leap year (x is always > 0)
 
 def is_leap_year(year: int) -> bool:
-    if year <= 0:
-        return False
-    else:
         return year % 4 == 0 and year % 100 != 0 or year % 400 == 0
 
 assert is_leap_year(2000)
@@ -69,10 +65,7 @@ assert to_upper_case(["Amazon", "Apple"]) == ["AMAZON", "APPLE"]
 # https://baike.baidu.com/item/%E5%BC%82%E6%88%96/10993677?fromtitle=xor&fromid=64178
 
 def xor(a: bool, b: bool) -> bool:
-    if int(a)+int(b) == 1:
-        return True
-    else:
-        return False
+    return a != b
 
 
 assert not xor(True, True)
