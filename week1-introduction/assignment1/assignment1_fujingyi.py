@@ -1,4 +1,4 @@
-# Assignment 1
+bu# Assignment 1
 # This assignment is for exercising Python fundamental I and getting familiar with Python syntax.
 
 # 注意 - Copy this file and rename as assignment1-{first_name}.py then complete code with a PR.
@@ -25,13 +25,7 @@ assert factorial(9) == 362880
 # [1 + 2 + ... + x] and x is always >= 1.
 
 def print_sum(x: int) -> str:
-    num = 0
-    if x < 1:
-        return "X cannot be smaller than 1"
-    else:
-        for i in range(1,x+1):
-            num += i
-        return str(num)
+    return str(sum(range(x + 1)))
 
 assert print_sum(1) == "1"
 assert print_sum(3) == "6"
@@ -41,7 +35,7 @@ assert print_sum(5) == "15"
 # Q3. Write a program to check is a year is leap year (x is always > 0)
 
 def is_leap_year(year: int) -> bool:
-        return year % 4 == 0 and year % 100 != 0 or year % 400 == 0
+    return year % 4 == 0 and year % 100 != 0 or year % 400 == 0
 
 assert is_leap_year(2000)
 assert is_leap_year(1996)
