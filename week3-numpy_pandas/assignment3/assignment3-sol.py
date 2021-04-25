@@ -14,6 +14,13 @@ cross(x, y)
 > [12, -6, -3]
 """
 
+
+def cross_product(x: [int], y: [int]) -> [int]:
+    return [x[1] * y[2] - x[2] * y[1], x[2] * y[0] - x[0] * y[2], x[0] * y[1] - x[1] * y[0]]
+
+
+assert cross_product([1, 2, 0], [4, 5, 6]) == [12, -6, -3]
+
 # Q2.
 """
 交易传输指令经常需要验证完整性，比如以下的例子
@@ -30,10 +37,29 @@ cross(x, y)
 可以通过很多种方式验证完整性，假设我们通过判断整个文本中的括号 比如 '{}', '[]', '()' 来判断下单是否为有效的。
 比如 {{[],[]}}是有效的，然而 []{[}](是无效的。 
 写一个python 程序来进行验证。
- def checkOrders(orders: [str]) -> [bool]:
+ def check_orders(orders: [str]) -> [bool]:
  return a list of True or False.
-checkOrders(["()", "(", "{}[]", "[][][]", "[{]{]"] return [True, False, True, True, False]
+check_orders(["()", "(", "{}[]", "[][][]", "[{]{]"] return [True, False, True, True, False]
 """
+
+
+def check_orders(orders: [str]) -> [bool]:
+    patterns = {")": "(", "}": "{", "]": "["}  # reverse look up
+    return [check_order(o, patterns) for o in orders]
+
+
+def check_order(order: str, patterns: {str: str}) -> bool:
+    stack = []
+    for c in order:
+        if c in patterns:
+            if len(stack) == 0 or stack.pop() != patterns[c]:
+                return False
+        else:
+            stack.append(c)
+    return len(stack) == 0
+
+
+assert check_orders(["()", "(", "{}[]", "[][][]", "[{]{]"]) == [True, False, True, True, False]
 
 # Q3
 """
@@ -51,11 +77,26 @@ Broker 4 使用了25-19=6s
 Broker 2 使用了35-25=10s
 综合表现，是broker2出现了最慢的交易表现。
 
-Def slowest(orders: [[int]]) -> int:
+def slowest(orders: [[int]]) -> int:
 
 slowest([[0, 2], [1, 5], [2, 7], [0, 16], [3, 19], [4, 25], [2, 35]]) return 2
 """
 
+
+def slowest_broker(orders: [[int]]) -> int:
+    brokers = [0 for i in range(20)]
+    prev_time = 0
+    for order in orders:
+        broker_id = order[0]
+        time_spent = order[1] - prev_time
+        brokers[broker_id] = max(time_spent, brokers[broker_id])
+        prev_time = order[1]
+
+    (mx, idx) = max((v, idx) for idx, v in enumerate(brokers))
+    return idx
+
+
+assert slowest_broker([[0, 2], [1, 5], [2, 7], [0, 16], [3, 19], [4, 25], [2, 35]]) == 2
 
 # Q4
 """
@@ -70,9 +111,28 @@ slowest([[0, 2], [1, 5], [2, 7], [0, 16], [3, 19], [4, 25], [2, 35]]) return 2
 3. moves = "RRDD", return False.
 4. moves = "LDRRLRUULR", return False.
 
-def judgeRobotMove(moves: str) -> bool:
+def judge_robot_move(moves: str) -> bool:
 
 """
+
+
+def judge_robot_move(moves: str) -> bool:
+    pos = [0, 0]
+    for s in moves:
+        if s == 'U':
+            pos[1] += 1
+        if s == 'D':
+            pos[1] -= 1
+        if s == 'L':
+            pos[0] -= 1
+        if s == 'R':
+            pos[0] += 1
+
+    return pos == [0, 0]
+
+
+assert not judge_robot_move("LDRRLRUULR")
+assert judge_robot_move("UD")
 
 # Q5
 """
@@ -84,3 +144,17 @@ def judgeRobotMove(moves: str) -> bool:
 
 可以使用regex或者python标准包的方法。
 """
+
+
+def check_email(email: str) -> bool:
+    import re
+    pattern = r"[-/.0-9_a-z]+@[-/.0-9_a-z]*\.(com|edu)"
+    m = re.match(pattern, email)
+    return m is not None
+
+
+assert not check_email("Mike@cnn.com")
+assert not check_email("mike@ny@times.com")
+assert not check_email("mike@ nytimes.com")
+assert not check_email("mike@nytimes.org")
+assert check_email("mike@nyu.edu")
